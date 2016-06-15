@@ -12,10 +12,12 @@ var hash;
     state.className = 'success';
   }
 
-  document.getElementById('myInput').addEventListener('change', function(evt) {
-      var f = evt.target.files[0];
-      handleFileSelect(f);
+  document.getElementById('myInput').addEventListener('input', function(evt) {
+      console.log(this.value)
+      handleFileSelect(this.value);
     }, false);
+
+
 
   document.getElementById('verifyButton').onclick = function() {
     if(!hash) {
@@ -39,17 +41,6 @@ var hash;
 })();
 
 
-holder.ondragover = function () { this.className = 'hover'; return false; };
-holder.ondragend = function () { this.className = ''; return false; };
-holder.ondrop = function (e) {
-  this.className = '';
-  e.preventDefault();
-  var file = e.dataTransfer.files[0];
-  handleFileSelect(file);
-
-  return false;
-};
-
 function status(text) {
     document.getElementById('status').innerText = text ;
 }
@@ -58,12 +49,6 @@ function crypto_callback(p) {
     status('Hashing ' + (p*100).toFixed(0) + '% completed');
 }
 
-holder.onclick = function () {
-    console.log("holder.onclick");
-
-    document.getElementById('myInput').click(
-    );
-};
 
 function humanFileSize(bytes, si) {
     var thresh = si ? 1000 : 1024;
@@ -83,19 +68,7 @@ function humanFileSize(bytes, si) {
 
 
 function handleFileSelect(file) {
-   document.getElementById('filename').innerText = file.name;
-   document.getElementById('filesize').innerText = humanFileSize(file.size,true);
-
-   reader = new FileReader();
-   reader.onload = function (event) {
-
-   var data = event.target.result;
-   setTimeout(function() {
-        CryptoJS_.SHA256(data, crypto_callback, crypto_finish);
-      }, 200);
-   };
-   console.log(file);
-   reader.readAsBinaryString(file);
+    CryptoJS_.SHA256(file, crypto_callback, crypto_finish);
 }
 
 
